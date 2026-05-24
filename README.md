@@ -17,21 +17,57 @@ The goal of the project is to build a practical TUI application that combines pe
 * **Transaction categorization**
 * **Budgeting and spending limits**
 * **Financial summaries and statistics**
-* Local data storage using DB
+* Local data storage
 
-## Interface
+## Installation
+TODO
 
-`clm` is designed as a **terminal user interface (TUI) application**, allowing users to interact with the system through a structured terminal interface. The program focuses on speed, simplicity, and scriptability.
+## Usage
+TODO
 
 ## Technology
 
 * **Rust**
-* TUI interface
+* TUI (terminal user interface) interface
 * **SQLite** database
 
 ## Project Status
 
 Early development.
+
+## Roadmap
+
+### MVP
+
+Goal: a usable single-user expense tracker with persistent storage.
+
+- [ ] Project skeleton and CI
+- [ ] Core domain model (accounts, categories, transactions)
+- [ ] SQLite persistence layer
+- [ ] Account management
+  - [ ] Create, edit, delete accounts (cash, card)
+  - [ ] View account balances
+- [ ] Category management
+  - [ ] Income and expense categories with subcategories
+  - [ ] Create, rename, delete categories
+- [ ] Transaction management
+  - [ ] Record income and expenses
+  - [ ] Transfer between accounts
+  - [ ] List, edit, delete transactions
+- [ ] TUI with three main views: accounts, categories, transactions
+- [ ] Keyboard-driven navigation
+- [ ] Basic monthly summary (total income / expenses per category)
+
+### Post-MVP
+
+- [ ] Budgets and spending limits
+- [ ] Transaction filtering and search
+- [ ] Import / export (CSV)
+- [ ] Investment assets (stocks, crypto)
+- [ ] Portfolio tracking with P/L
+- [ ] Charts and detailed statistics
+- [ ] Multi-currency support
+- [ ] Configuration file
 
 ## License
 
