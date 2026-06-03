@@ -1,0 +1,5 @@
+#!/bin/sh
+# Heavier check before sharing: lint the whole workspace.
+set -e
+echo "run: cargo clippy"
+cargo clippy --workspace --all-targets --all-features -- -D warnings
