@@ -41,8 +41,8 @@ Early development.
 
 Goal: a usable single-user expense tracker with persistent storage.
 
-- [ ] Project skeleton and CI
-- [ ] Core domain model (accounts, categories, transactions)
+- [x] Project skeleton and CI
+- [ ] Core domain model (accounts, transactions)
 - [ ] SQLite persistence layer
 - [ ] Account management
   - [ ] Create, edit, delete accounts (cash, card)
