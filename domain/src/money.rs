@@ -132,7 +132,7 @@ impl Neg for Money {
 /// [`Currency::decimals`].
 // ISO 4217 codes are conventionally uppercase; keep them as the variant names.
 #[allow(clippy::upper_case_acronyms)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Currency {
     EUR,
     USD,
