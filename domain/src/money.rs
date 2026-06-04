@@ -3,7 +3,7 @@
 //! Amounts are stored as integer **minor units** (e.g. cents), never as floats,
 //! so that arithmetic is exact and totals always balance.
 
-use std::ops::Neg;
+use std::{fmt, ops::Neg};
 
 pub mod error;
 pub use error::{MoneyError, MoneyResult};
@@ -92,6 +92,25 @@ impl Money {
     /// Returns `true` if the amount is exactly zero.
     pub fn is_zero(self) -> bool {
         self.amount == 0
+    }
+}
+
+impl fmt::Display for Money {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let code = self.currency.code();
+        let decimals = self.currency.decimals() as usize;
+
+        if decimals == 0 {
+            return write!(f, "{} {code}", self.amount);
+        }
+
+        let divisor = 10_u64.pow(decimals as u32);
+        let sign = if self.amount.is_negative() { "-" } else { "" };
+        let abs = self.amount.unsigned_abs();
+        let int = abs / divisor;
+        let frac = abs % divisor;
+
+        write!(f, "{sign}{int}.{frac:0decimals$} {code}")
     }
 }
 
