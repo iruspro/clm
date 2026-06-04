@@ -7,7 +7,7 @@
 
 use uuid::Uuid;
 
-/// Unique identifier for an [`AccountGroup`] (a time-ordered UUID v7).
+/// Unique identifier for an [`AccountGroup`](crate::account_group::AccountGroup) (a time-ordered UUID v7).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AccountGroupId(Uuid);
 
@@ -30,7 +30,7 @@ impl From<Uuid> for AccountGroupId {
     }
 }
 
-/// Unique identifier for an [`Account`] (a time-ordered UUID v7).
+/// Unique identifier for an [`Account`](crate::account::Account) (a time-ordered UUID v7).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AccountId(Uuid);
 
@@ -53,7 +53,7 @@ impl From<Uuid> for AccountId {
     }
 }
 
-/// Unique identifier for a [`Transaction`] (a time-ordered UUID v7).
+/// Unique identifier for a [`Transaction`](crate::journal::Transaction) (a time-ordered UUID v7).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct TransactionId(Uuid);
 
