@@ -3,6 +3,7 @@
 
 pub mod balanced_postings;
 pub mod posting;
+pub mod repository;
 
 use time::Date;
 
