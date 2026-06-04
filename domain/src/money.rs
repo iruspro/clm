@@ -78,6 +78,21 @@ impl Money {
 
         iter.try_fold(first, Money::checked_add).map(Some)
     }
+
+    /// Returns `true` if the amount is greater than zero.
+    pub fn is_positive(self) -> bool {
+        self.amount > 0
+    }
+
+    /// Returns `true` if the amount is less than zero.
+    pub fn is_negative(self) -> bool {
+        self.amount < 0
+    }
+
+    /// Returns `true` if the amount is exactly zero.
+    pub fn is_zero(self) -> bool {
+        self.amount == 0
+    }
 }
 
 /// Negates the amount, keeping the currency. Used to flip a posting between
