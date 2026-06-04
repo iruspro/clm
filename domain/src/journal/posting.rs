@@ -51,7 +51,7 @@ impl Posting {
     /// account's type. Summing `signed()` over an account's postings yields its
     /// raw (debit-positive) balance.
     pub fn signed(&self) -> Money {
-        let amount = self.amount.into_money();
+        let amount = self.amount.to_money();
         match self.side {
             Side::Debit => amount,
             Side::Credit => -amount,

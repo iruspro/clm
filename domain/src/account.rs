@@ -101,7 +101,7 @@ impl Account {
 
     // --- Behavior ---
     /// Replaces the account's name.
-    pub fn rename(&mut self, name: Name) {
+    pub fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 

@@ -28,7 +28,7 @@ impl Magnitude {
     }
 
     /// Consumes the value and returns the inner [`Money`].
-    pub fn into_money(self) -> Money {
+    pub fn to_money(self) -> Money {
         self.0
     }
 

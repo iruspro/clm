@@ -1,3 +1,5 @@
+//! Typed identifiers for domain entities — thin newtypes over a UUID (v7).
+
 // TODO: collapse the repeated id-newtype boilerplate (struct + derives +
 // `generate` + `to_uuid` + `From<Uuid>`) into a `macro_rules!` macro, so each id
 // becomes a single `id_type! { /// doc \n SomeId }` invocation. Deferred until
@@ -15,6 +17,7 @@ impl AccountGroupId {
         Self(Uuid::now_v7())
     }
 
+    /// Returns the underlying UUID.
     pub fn to_uuid(self) -> Uuid {
         self.0
     }
@@ -37,6 +40,7 @@ impl AccountId {
         Self(Uuid::now_v7())
     }
 
+    /// Returns the underlying UUID.
     pub fn to_uuid(self) -> Uuid {
         self.0
     }
@@ -49,7 +53,7 @@ impl From<Uuid> for AccountId {
     }
 }
 
-/// Unique identifier for an [`Transaction`] (a time-ordered UUID v7).
+/// Unique identifier for a [`Transaction`] (a time-ordered UUID v7).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct TransactionId(Uuid);
 
@@ -59,6 +63,7 @@ impl TransactionId {
         Self(Uuid::now_v7())
     }
 
+    /// Returns the underlying UUID.
     pub fn to_uuid(self) -> Uuid {
         self.0
     }
