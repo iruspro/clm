@@ -50,6 +50,7 @@ pub struct Account {
 }
 
 impl Account {
+    // --- Constructors ---
     /// Creates a new account with a freshly generated id and no group.
     ///
     /// Pass an empty `description` (`""`) if the account has none.
@@ -85,6 +86,7 @@ impl Account {
         }
     }
 
+    // --- Accessors ---
     /// Returns the account's unique id.
     pub fn id(&self) -> AccountId {
         self.id
@@ -113,6 +115,23 @@ impl Account {
     /// Returns the id of the group this account belongs to, if any.
     pub fn group_id(&self) -> Option<AccountGroupId> {
         self.group_id
+    }
+
+    // --- Behavior ---
+    /// Replaces the account's name.
+    pub fn rename(&mut self, name: Name) {
+        self.name = name;
+    }
+
+    /// Replaces the account's description. Pass an empty `String` to clear it.
+    pub fn set_description(&mut self, description: String) {
+        self.description = description;
+    }
+
+    /// Moves the account into the given group, or detaches it from any group
+    /// when `None`.
+    pub fn move_to_group(&mut self, group_id: Option<AccountGroupId>) {
+        self.group_id = group_id;
     }
 }
 
