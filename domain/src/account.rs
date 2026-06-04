@@ -125,7 +125,7 @@ impl Account {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AccountKind {
     /// Something you own (cash, bank balance). Normal balance: debit.
-    Asset(AssetKind),
+    Asset,
     /// Something you owe (credit-card debt, loans). Normal balance: credit.
     Liability,
     /// Net worth — opening balances and accumulated result. Normal balance: credit.
@@ -143,17 +143,8 @@ impl AccountKind {
     /// income increase on the credit side.
     pub fn normal_balance(&self) -> Side {
         match self {
-            AccountKind::Asset(_) | AccountKind::Expense => Side::Debit,
+            AccountKind::Asset | AccountKind::Expense => Side::Debit,
             AccountKind::Liability | AccountKind::Equity | AccountKind::Income => Side::Credit,
         }
     }
-}
-
-/// The kind of asset an [`AccountKind::Asset`] represents.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum AssetKind {
-    /// A bank account.
-    Bank,
-    /// Physical cash.
-    Cash,
 }
