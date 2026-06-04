@@ -44,6 +44,7 @@ pub struct AccountGroup {
 }
 
 impl AccountGroup {
+    // --- Constructors ---
     /// Creates a new group with a freshly generated id.
     ///
     /// Pass an empty `description` (`""`) if the group has none.
@@ -65,6 +66,7 @@ impl AccountGroup {
         }
     }
 
+    // --- Accessors ---
     /// Returns the group's unique id.
     pub fn id(&self) -> AccountGroupId {
         self.id
@@ -78,5 +80,16 @@ impl AccountGroup {
     /// Returns the group's description, or an empty string if none was set.
     pub fn description(&self) -> &str {
         &self.description
+    }
+
+    // --- Behavior ---
+    /// Replaces the group's name.
+    pub fn rename(&mut self, name: Name) {
+        self.name = name;
+    }
+
+    /// Replaces the group's description. Pass `""` to clear it.
+    pub fn set_description(&mut self, description: &str) {
+        self.description = description.to_string();
     }
 }
