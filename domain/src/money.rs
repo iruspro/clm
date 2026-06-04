@@ -26,6 +26,16 @@ impl Money {
         Money { amount, currency }
     }
 
+    /// Creates a zero amount in the given `currency`.
+    ///
+    /// Handy as the starting value when summing amounts of one currency.
+    pub fn zero(currency: Currency) -> Self {
+        Money {
+            amount: 0,
+            currency,
+        }
+    }
+
     /// Returns the amount in minor units (e.g. `150` for $1.50).
     pub fn amount(self) -> i64 {
         self.amount
