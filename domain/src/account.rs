@@ -4,25 +4,29 @@
 
 pub mod repository;
 
-use crate::{account_group::AccountGroupId, journal::Side, money::Currency};
+use crate::{account_group::AccountGroupId, journal::Side, money::Currency, name::Name};
 use uuid::Uuid;
 
 // --- Identity ---
 /// Unique identifier for an [`Account`] (a time-ordered UUID v7).
-#[derive(Debug, Clone, Copy, PartialEq, Hash, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AccountId(Uuid);
 
 impl AccountId {
     /// Generates a new, unique id.
     pub fn generate() -> Self {
-        AccountId(Uuid::now_v7())
+        Self(Uuid::now_v7())
+    }
+
+    pub fn to_uuid(self) -> Uuid {
+        self.0
     }
 }
 
 impl From<Uuid> for AccountId {
     /// Wraps an existing UUID — used when reconstituting from storage.
     fn from(u: Uuid) -> Self {
-        AccountId(u)
+        Self(u)
     }
 }
 
@@ -33,13 +37,13 @@ impl From<Uuid> for AccountId {
 /// against. Its [`AccountKind`] fixes how the balance behaves (see
 /// [`AccountKind::normal_balance`]). May belong to an
 /// [`AccountGroup`](crate::account_group::AccountGroup).
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Account {
     id: AccountId,
     kind: AccountKind,
     currency: Currency,
 
-    name: String,
+    name: Name,
     description: String,
 
     group_id: Option<AccountGroupId>,
@@ -48,19 +52,14 @@ pub struct Account {
 impl Account {
     /// Creates a new account with a freshly generated id and no group.
     ///
-    /// `description` may be omitted (`None`); it is then stored as an empty string.
-    pub fn new(
-        kind: AccountKind,
-        currency: Currency,
-        name: impl Into<String>,
-        description: Option<&str>,
-    ) -> Self {
+    /// Pass an empty `description` (`""`) if the account has none.
+    pub fn new(kind: AccountKind, currency: Currency, name: Name, description: &str) -> Self {
         Account {
             id: AccountId::generate(),
             kind,
             currency,
-            name: name.into(),
-            description: description.map(|d| d.to_string()).unwrap_or_default(),
+            name,
+            description: description.to_string(),
 
             group_id: None,
         }
@@ -72,8 +71,8 @@ impl Account {
         id: AccountId,
         kind: AccountKind,
         currency: Currency,
-        name: String,
-        description: String,
+        name: Name,
+        description: &str,
         group_id: Option<AccountGroupId>,
     ) -> Self {
         Account {
@@ -81,7 +80,7 @@ impl Account {
             kind,
             currency,
             name,
-            description,
+            description: description.to_string(),
             group_id,
         }
     }
@@ -102,7 +101,7 @@ impl Account {
     }
 
     /// Returns the account's display name.
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> &Name {
         &self.name
     }
 

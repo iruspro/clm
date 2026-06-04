@@ -4,24 +4,30 @@
 
 use uuid::Uuid;
 
+use crate::name::Name;
+
 pub mod repository;
 
 // --- Identity ---
 /// Unique identifier for an [`AccountGroup`] (a time-ordered UUID v7).
-#[derive(Debug, Clone, Copy, PartialEq, Hash, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct AccountGroupId(Uuid);
 
 impl AccountGroupId {
     /// Generates a new, unique id.
     pub fn generate() -> Self {
-        AccountGroupId(Uuid::now_v7())
+        Self(Uuid::now_v7())
+    }
+
+    pub fn to_uuid(self) -> Uuid {
+        self.0
     }
 }
 
 impl From<Uuid> for AccountGroupId {
     /// Wraps an existing UUID — used when reconstituting from storage.
     fn from(u: Uuid) -> Self {
-        AccountGroupId(u)
+        Self(u)
     }
 }
 
@@ -30,32 +36,32 @@ impl From<Uuid> for AccountGroupId {
 ///
 /// Groups organise accounts (e.g. a "Cash" group with one account per currency).
 /// They hold no money and cannot be posted to.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AccountGroup {
     id: AccountGroupId,
-    name: String,
+    name: Name,
     description: String,
 }
 
 impl AccountGroup {
     /// Creates a new group with a freshly generated id.
     ///
-    /// `description` may be omitted (`None`); it is then stored as an empty string.
-    pub fn new(name: impl Into<String>, description: Option<&str>) -> Self {
+    /// Pass an empty `description` (`""`) if the group has none.
+    pub fn new(name: Name, description: &str) -> Self {
         AccountGroup {
             id: AccountGroupId::generate(),
-            name: name.into(),
-            description: description.map(|d| d.to_string()).unwrap_or_default(),
+            name,
+            description: description.to_string(),
         }
     }
 
     /// Reconstitutes a group from stored fields (e.g. a database row), trusting
     /// that it was valid when persisted. Use [`AccountGroup::new`] to create one.
-    pub fn from_parts(id: AccountGroupId, name: String, description: String) -> Self {
+    pub fn from_parts(id: AccountGroupId, name: Name, description: &str) -> Self {
         AccountGroup {
             id,
             name,
-            description,
+            description: description.to_string(),
         }
     }
 
@@ -65,7 +71,7 @@ impl AccountGroup {
     }
 
     /// Returns the group's display name.
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> &Name {
         &self.name
     }
 
