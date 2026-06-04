@@ -2,34 +2,9 @@
 //! [`Account`](crate::account::Account)s in the chart of accounts (e.g. a "Cash"
 //! group holding one account per currency). A group holds no money itself.
 
-use uuid::Uuid;
-
-use crate::name::Name;
+use crate::{ids::AccountGroupId, name::Name};
 
 pub mod repository;
-
-// --- Identity ---
-/// Unique identifier for an [`AccountGroup`] (a time-ordered UUID v7).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct AccountGroupId(Uuid);
-
-impl AccountGroupId {
-    /// Generates a new, unique id.
-    pub fn generate() -> Self {
-        Self(Uuid::now_v7())
-    }
-
-    pub fn to_uuid(self) -> Uuid {
-        self.0
-    }
-}
-
-impl From<Uuid> for AccountGroupId {
-    /// Wraps an existing UUID — used when reconstituting from storage.
-    fn from(u: Uuid) -> Self {
-        Self(u)
-    }
-}
 
 // --- Entity ---
 /// A named group of accounts in the chart of accounts.
@@ -48,9 +23,9 @@ impl AccountGroup {
     /// Creates a new group with a freshly generated id.
     ///
     /// Pass an empty `description` (`String::new()`) if the group has none.
-    pub fn new(name: Name, description: String) -> Self {
+    pub fn new(id: AccountGroupId, name: Name, description: String) -> Self {
         AccountGroup {
-            id: AccountGroupId::generate(),
+            id,
             name,
             description,
         }

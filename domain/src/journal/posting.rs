@@ -3,7 +3,7 @@
 
 pub mod magnitude;
 
-use crate::{account::AccountId, journal::posting::magnitude::Magnitude, money::Money, side::Side};
+use crate::{ids::AccountId, journal::posting::magnitude::Magnitude, money::Money, side::Side};
 
 /// A single line of a transaction: an amount applied to an account on one side.
 ///

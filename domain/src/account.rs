@@ -4,31 +4,7 @@
 
 pub mod repository;
 
-use crate::{account_group::AccountGroupId, money::Currency, name::Name, side::Side};
-use uuid::Uuid;
-
-// --- Identity ---
-/// Unique identifier for an [`Account`] (a time-ordered UUID v7).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct AccountId(Uuid);
-
-impl AccountId {
-    /// Generates a new, unique id.
-    pub fn generate() -> Self {
-        Self(Uuid::now_v7())
-    }
-
-    pub fn to_uuid(self) -> Uuid {
-        self.0
-    }
-}
-
-impl From<Uuid> for AccountId {
-    /// Wraps an existing UUID — used when reconstituting from storage.
-    fn from(u: Uuid) -> Self {
-        Self(u)
-    }
-}
+use crate::{ids::AccountGroupId, ids::AccountId, money::Currency, name::Name, side::Side};
 
 // --- Entity ---
 /// A single account in the chart of accounts.
@@ -54,9 +30,15 @@ impl Account {
     /// Creates a new account with a freshly generated id and no group.
     ///
     /// Pass an empty `description` (`String::new()`) if the account has none.
-    pub fn new(kind: AccountKind, currency: Currency, name: Name, description: String) -> Self {
+    pub fn new(
+        id: AccountId,
+        kind: AccountKind,
+        currency: Currency,
+        name: Name,
+        description: String,
+    ) -> Self {
         Account {
-            id: AccountId::generate(),
+            id,
             kind,
             currency,
             name,
