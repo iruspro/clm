@@ -1,14 +1,13 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod account;
+pub mod account_group;
+mod error;
+mod ids;
+pub mod journal;
+pub mod money;
+mod name;
+mod side;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use crate::error::repository::RepoError;
+pub use crate::ids::{AccountGroupId, AccountId, TransactionId};
+pub use crate::name::{Name, NameError};
+pub use crate::side::Side;
