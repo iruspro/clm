@@ -4,7 +4,7 @@
 
 pub mod repository;
 
-use crate::{account_group::AccountGroupId, journal::Side, money::Currency, name::Name};
+use crate::{account_group::AccountGroupId, money::Currency, name::Name, side::Side};
 use uuid::Uuid;
 
 // --- Identity ---

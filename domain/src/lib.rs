@@ -4,3 +4,4 @@ pub mod error;
 pub mod journal;
 pub mod money;
 pub mod name;
+pub mod side;
