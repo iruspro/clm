@@ -47,22 +47,22 @@ impl AccountGroup {
     // --- Constructors ---
     /// Creates a new group with a freshly generated id.
     ///
-    /// Pass an empty `description` (`""`) if the group has none.
-    pub fn new(name: Name, description: &str) -> Self {
+    /// Pass an empty `description` (`String::new()`) if the group has none.
+    pub fn new(name: Name, description: String) -> Self {
         AccountGroup {
             id: AccountGroupId::generate(),
             name,
-            description: description.to_string(),
+            description,
         }
     }
 
     /// Reconstitutes a group from stored fields (e.g. a database row), trusting
     /// that it was valid when persisted. Use [`AccountGroup::new`] to create one.
-    pub fn from_parts(id: AccountGroupId, name: Name, description: &str) -> Self {
+    pub fn from_parts(id: AccountGroupId, name: Name, description: String) -> Self {
         AccountGroup {
             id,
             name,
-            description: description.to_string(),
+            description,
         }
     }
 
@@ -88,8 +88,8 @@ impl AccountGroup {
         self.name = name;
     }
 
-    /// Replaces the group's description. Pass `""` to clear it.
-    pub fn set_description(&mut self, description: &str) {
-        self.description = description.to_string();
+    /// Replaces the group's description. Pass an empty `String` to clear it.
+    pub fn set_description(&mut self, description: String) {
+        self.description = description;
     }
 }

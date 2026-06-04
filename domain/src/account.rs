@@ -53,14 +53,14 @@ impl Account {
     // --- Constructors ---
     /// Creates a new account with a freshly generated id and no group.
     ///
-    /// Pass an empty `description` (`""`) if the account has none.
-    pub fn new(kind: AccountKind, currency: Currency, name: Name, description: &str) -> Self {
+    /// Pass an empty `description` (`String::new()`) if the account has none.
+    pub fn new(kind: AccountKind, currency: Currency, name: Name, description: String) -> Self {
         Account {
             id: AccountId::generate(),
             kind,
             currency,
             name,
-            description: description.to_string(),
+            description,
 
             group_id: None,
         }
@@ -73,7 +73,7 @@ impl Account {
         kind: AccountKind,
         currency: Currency,
         name: Name,
-        description: &str,
+        description: String,
         group_id: Option<AccountGroupId>,
     ) -> Self {
         Account {
@@ -81,7 +81,7 @@ impl Account {
             kind,
             currency,
             name,
-            description: description.to_string(),
+            description,
             group_id,
         }
     }
