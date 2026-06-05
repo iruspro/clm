@@ -5,9 +5,13 @@ pub mod balanced_postings;
 pub mod posting;
 pub mod repository;
 
+pub use balanced_postings::{BalancedPostings, BalancedPostingsError};
+pub use posting::{Posting, magnitude::MagnitudeError};
+pub use repository::TransactionRepository;
+
 use time::Date;
 
-use crate::{ids::TransactionId, journal::balanced_postings::BalancedPostings};
+use crate::ids::TransactionId;
 
 // --- Entity ---
 /// A journal entry: a dated set of balanced postings recorded as one event.
@@ -57,6 +61,16 @@ impl Transaction {
             description,
             postings,
         }
+    }
+
+    /// Deconstructs the transaction into its owned parts, in the same order
+    /// [`from_parts`](Transaction::from_parts) takes them.
+    ///
+    /// The inverse of `from_parts`: use it to move the fields out (e.g. when
+    /// persisting, or building a read model) without cloning `description` and
+    /// `postings`.
+    pub fn into_parts(self) -> (TransactionId, Date, String, BalancedPostings) {
+        (self.id, self.date, self.description, self.postings)
     }
 
     // --- Accessors ---

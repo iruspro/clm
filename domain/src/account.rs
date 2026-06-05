@@ -3,6 +3,7 @@
 //! ([`AccountKind`]).
 
 pub mod repository;
+pub use repository::AccountRepository;
 
 use crate::{ids::AccountGroupId, ids::AccountId, money::Currency, name::Name, side::Side};
 
@@ -66,6 +67,32 @@ impl Account {
             description,
             group_id,
         }
+    }
+
+    /// Deconstructs the account into its owned parts, in the same order
+    /// [`from_parts`](Account::from_parts) takes them.
+    ///
+    /// The inverse of `from_parts`: use it to move the fields out (e.g. when
+    /// persisting, or building a read model) without cloning `name` and
+    /// `description`.
+    pub fn into_parts(
+        self,
+    ) -> (
+        AccountId,
+        AccountKind,
+        Currency,
+        Name,
+        String,
+        Option<AccountGroupId>,
+    ) {
+        (
+            self.id,
+            self.kind,
+            self.currency,
+            self.name,
+            self.description,
+            self.group_id,
+        )
     }
 
     // --- Accessors ---

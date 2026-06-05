@@ -11,4 +11,6 @@ pub trait TransactionRepository {
 
     /// Loads the transaction with the given id (`NotFound` if it does not exist).
     fn get(&self, transaction_id: TransactionId) -> RepoResult<Transaction>;
+
+    fn get_all(&self) -> RepoResult<Vec<Transaction>>;
 }

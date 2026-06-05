@@ -6,6 +6,8 @@ use crate::{ids::AccountGroupId, name::Name};
 
 pub mod repository;
 
+pub use repository::AccountGroupRepository;
+
 // --- Entity ---
 /// A named group of accounts in the chart of accounts.
 ///
