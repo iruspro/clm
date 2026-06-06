@@ -69,28 +69,12 @@ Goal: a usable single-user expense tracker with persistent storage.
 - [ ] Multi-currency support
 - [ ] Configuration file
 
-## Development
+## Contributing
 
-The hooks require the `rustfmt` and `clippy` toolchain components:
-
-```sh
-rustup component add rustfmt clippy
-```
-
-After cloning, install the git hooks once:
-
-```sh
-./scripts/setup-hooks.sh
-```
-
-This points git at the tracked `.githooks/` directory (via `core.hooksPath`) and enables:
-
-* **pre-commit** — `cargo fmt --check` (fast formatting check on every commit)
-* **pre-push** — `cargo clippy` with warnings denied (lint before sharing)
-
-`core.hooksPath` is a local, per-clone setting, so each clone must run the script once.
-Use `git commit --no-verify` / `git push --no-verify` to bypass a hook for a WIP change;
-CI enforces the same checks regardless.
+clm is a Rust (edition 2024) Cargo workspace built with a clean architecture.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the toolchain setup (note: formatting
+requires nightly `rustfmt`), project layout, git hooks, and the build/test/lint
+workflow.
 
 ## License
 

@@ -16,5 +16,5 @@ git config core.hooksPath .githooks
 chmod +x .githooks/pre-commit .githooks/pre-push
 
 echo "✓ Git hooks installed (core.hooksPath -> .githooks)"
-echo "  pre-commit: cargo fmt --check"
+echo "  pre-commit: cargo +nightly fmt --check"
 echo "  pre-push:   cargo clippy"
