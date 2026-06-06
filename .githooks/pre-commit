@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
-echo "run: cargo fmt --check"
-cargo fmt --all --check
+echo "run: cargo +nightly fmt --check"
+cargo +nightly fmt --all --check

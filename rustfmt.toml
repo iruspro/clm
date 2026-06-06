@@ -1,0 +1,7 @@
+# Group imports into std / external crate / local crate blocks.
+# Unstable (nightly) — run `cargo +nightly fmt`.
+group_imports = "StdExternalCrate"
+
+# One `use` statement per module path.
+# Unstable (nightly) — run `cargo +nightly fmt`.
+imports_granularity = "Module"
