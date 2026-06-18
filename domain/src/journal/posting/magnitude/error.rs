@@ -1,19 +1,9 @@
-use std::error::Error;
-use std::fmt;
+use thiserror::Error;
 
 /// An error from constructing a [`Magnitude`](super::Magnitude).
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum MagnitudeError {
     /// The amount was zero or negative; a magnitude must be strictly positive.
+    #[error("magnitude must be positive")]
     NonPositive,
 }
-
-impl fmt::Display for MagnitudeError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            MagnitudeError::NonPositive => write!(f, "magnitude must be positive"),
-        }
-    }
-}
-
-impl Error for MagnitudeError {}

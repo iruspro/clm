@@ -1,22 +1,12 @@
-use std::error::Error;
-use std::fmt;
+use thiserror::Error;
 
 /// An error from a repository operation.
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum RepoError {
     /// The requested entity does not exist.
+    #[error("not found")]
     NotFound,
     /// The underlying storage failed.
+    #[error("storage error: {0}")]
     Storage(String),
 }
-
-impl fmt::Display for RepoError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            RepoError::NotFound => write!(f, "not found"),
-            RepoError::Storage(err) => write!(f, "storage error: {err}"),
-        }
-    }
-}
-
-impl Error for RepoError {}
