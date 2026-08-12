@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS posting;
+DROP TABLE IF EXISTS journal_entry;
+DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS account_group;
