@@ -45,29 +45,29 @@ Goal: a usable single-user expense tracker with persistent storage.
 - [x] Core domain model (accounts, transactions)
 - [ ] SQLite persistence layer
 - [ ] Account management
-  - [ ] Create, edit, delete accounts
-  - [ ] View account balances
+  - [ ] Create, edit, list accounts
 - [ ] Category management
   - [ ] Income and expense categories with subcategories
-  - [ ] Create, rename, delete categories
+  - [ ] Create, edit, list categories
 - [ ] Transaction management
   - [ ] Record income and expenses
   - [ ] Transfer between accounts
-  - [ ] List, edit, delete transactions
+  - [ ] List (with filters), edit, delete transactions
 - [ ] TUI with three main views: accounts, categories, transactions
 - [ ] Keyboard-driven navigation
 - [ ] Basic monthly summary (total income / expenses per category)
 
 ### Post-MVP
 
-- [ ] Budgets and spending limits
-- [ ] Transaction filtering and search
+- [ ] Sync between multiple devices
+- [ ] Configuration file
 - [ ] Import / export (CSV)
+- [ ] Full multi-currency support
 - [ ] Investment assets (stocks, crypto)
 - [ ] Portfolio tracking with P/L
+- [ ] Budgets and spending limits
 - [ ] Charts and detailed statistics
-- [ ] Multi-currency support
-- [ ] Configuration file
+- [ ] Split bills, debts
 
 ## Contributing
 

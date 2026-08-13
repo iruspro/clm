@@ -53,13 +53,19 @@ clm-tui ─────┐
 
 | Crate | Role | Depends on |
 | --- | --- | --- |
-| [`domain`](domain) | Pure business model — entities, value objects, and repository **traits**. No I/O, no dependencies on other layers. | — |
-| [`application`](application) | Use cases that orchestrate the domain through the repository traits; `AppError`. | `domain` |
-| [`infrastructure`](infrastructure) | Concrete adapters that **implement** the domain's repository traits (SQLite persistence). *(not yet implemented)* | `domain` |
-| [`clm-tui`](clm-tui) | Terminal UI and the binary entry point; wires `infrastructure` into `application` at the composition root. *(not yet implemented)* | `application`, `infrastructure` |
+| [`domain`](domain) | Pure business model — aggregates, entities, value objects, and repository **traits**. No I/O, no dependencies on other layers. | — |
+| [`application`](application) | Services that orchestrate the domain through the repository traits; read-side views; Also hosts the `infrastructure` module below. | `domain`, `db` |
+| [`application::infrastructure`](application/src/infrastructure.rs) | Concrete adapters that **implement** the domain's repository traits (SQLite persistence). | `domain` |
+| [`clm-tui`](clm-tui) | Terminal UI and the binary entry point; wires `application::infrastructure` into `application` at the composition root. | `application`, `domain`, `db` |
 
 A practical consequence: the domain defines `trait *Repository`, and
 `infrastructure` is the only crate allowed to implement them.
+
+Inside `clm-tui` the layout follows **The Elm Architecture**: `app` holds the
+state and the composition root, `reducer` is the one pure
+`(State, Event) -> (State, Vec<Command>)` step, `tui` renders and listens for
+input, and `actor` runs the resulting commands against the database on a
+background thread. `cargo doc -p clm-tui --open` starts at that overview.
 
 ## Development workflow
 
@@ -85,6 +91,10 @@ RUSTDOCFLAGS="-D warnings" cargo doc --workspace --no-deps --all-features
 - **Document every public item.** `pub` types, functions, and modules carry a
   doc comment; modules open with a `//!` summary. The `doc` CI job denies
   warnings, so broken `[`intra-doc links`]` fail the build.
+- **Document a module inside the module**, with `//!` — never with a `///`
+  comment on its `mod foo;` declaration. Rustdoc merges the two, then resolves
+  the merged comment's links against the *declaring* module, which silently
+  breaks every relative link in the module's own header.
 - **Imports** are grouped std → external → crate and merged per module; this is
   enforced by `rustfmt.toml`. Don't hand-organize — let `cargo +nightly fmt`
   sort it.
@@ -139,9 +149,9 @@ Every push and pull request runs [`.github/workflows/ci.yml`](.github/workflows/
 | Job | Toolchain | Command |
 | --- | --- | --- |
 | **rustfmt** | nightly | `cargo +nightly fmt --all --check` |
-| **clippy** | stable | `cargo clippy --workspace --all-targets --all-features` (warnings denied) |
+| **clippy** | stable | `cargo clippy --workspace --all-targets --all-features -- -D warnings` |
 | **test** | stable + beta | `cargo build` then `cargo test --workspace --all-features` |
-| **doc** | stable | `cargo doc --workspace --no-deps --all-features` (warnings denied) |
+| **doc** | stable | `cargo doc --workspace --no-deps --all-features` with `RUSTDOCFLAGS=-D warnings` |
 
 The `test` and `doc` jobs run on pull requests and on the `main`/`develop`
 branches.

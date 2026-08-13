@@ -1,3 +1,6 @@
+edition = "2024"
+style_edition = "2024"
+
 # Group imports into std / external crate / local crate blocks.
 # Unstable (nightly) — run `cargo +nightly fmt`.
 group_imports = "StdExternalCrate"
