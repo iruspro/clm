@@ -8,7 +8,6 @@ pub use self::repository::AccountGroupRepository;
 use crate::ids::AccountGroupId;
 use crate::name::Name;
 
-// --- Entity ---
 /// A named group of accounts in the chart of accounts.
 ///
 /// Groups organise accounts (e.g. a "Cash" group with one account per currency).
@@ -21,12 +20,12 @@ pub struct AccountGroup {
 }
 
 impl AccountGroup {
-    // --- Constructors ---
+    // region: Constructors
     /// Creates a new group from the given fields.
     ///
-    /// Generate `id` with [`AccountGroupId::new`]. Pass an empty
-    /// `description` (`String::new()`) if the group has none. `name` is already
-    /// validated by its type — build it via [`Name::new`](crate::Name::new).
+    /// Generate `id` with [`AccountGroupId::new`]. Pass an empty `description`
+    /// (`String::new()`) if the group has none. `name` is already validated by
+    /// its type — build it via [`Name::new`](crate::Name::new).
     pub fn new(id: AccountGroupId, name: Name, description: String) -> Self {
         AccountGroup {
             id,
@@ -35,9 +34,7 @@ impl AccountGroup {
         }
     }
 
-    /// Reconstitutes a group from its parts — the inverse of
-    /// [`into_parts`](AccountGroup::into_parts), for rebuilding an entity loaded
-    /// from storage.
+    /// Reconstitutes a group from its parts.
     ///
     /// Performs no validation of its own; each part enforces its own invariant
     /// at construction. When reconstituting trusted data you can build the
@@ -52,17 +49,9 @@ impl AccountGroup {
             description,
         }
     }
+    // endregion
 
-    /// Deconstructs the group into its owned parts, in the same order
-    /// [`from_parts`](AccountGroup::from_parts) takes them.
-    ///
-    /// The inverse of `from_parts`: use it to move the fields out (e.g. when
-    /// persisting) without cloning `name` or `description`.
-    pub fn into_parts(self) -> (AccountGroupId, Name, String) {
-        (self.id, self.name, self.description)
-    }
-
-    // --- Accessors ---
+    // region: Getters/Setters
     /// Returns the group's unique id.
     pub fn id(&self) -> AccountGroupId {
         self.id
@@ -78,9 +67,8 @@ impl AccountGroup {
         &self.description
     }
 
-    // --- Behavior ---
     /// Replaces the group's name.
-    pub fn rename(&mut self, name: Name) {
+    pub fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 
@@ -88,4 +76,5 @@ impl AccountGroup {
     pub fn set_description(&mut self, description: String) {
         self.description = description;
     }
+    // endregion
 }

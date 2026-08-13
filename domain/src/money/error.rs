@@ -11,4 +11,9 @@ pub enum MoneyError {
     /// The result does not fit in the underlying `i64` (minor units).
     #[error("arithmetic overflow")]
     Overflow,
+    /// The stored discriminant does not match any [`Currency`] variant — the
+    /// value came from outside the domain (a hand-edited row, an older schema)
+    /// and cannot be decoded.
+    #[error("unknown currency discriminant: {0}")]
+    UnknownCurrency(u16),
 }

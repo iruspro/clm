@@ -1,18 +1,15 @@
 use crate::RepoError;
-use crate::ids::TransactionId;
-use crate::journal::Transaction;
+use crate::ids::EntryId;
+use crate::journal::Entry;
 
-/// Persistence operations for [`Transaction`] aggregates.
-pub trait TransactionRepository {
-    /// Stores a new transaction.
-    fn add(&self, transaction: &Transaction) -> Result<(), RepoError>;
-    /// Persists changes to an existing transaction.
-    fn update(&self, transaction: &Transaction) -> Result<(), RepoError>;
-    /// Removes the transaction with the given id.
-    fn delete(&self, transaction_id: TransactionId) -> Result<(), RepoError>;
-
-    /// Loads the transaction with the given id (`NotFound` if it does not exist).
-    fn get(&self, transaction_id: TransactionId) -> Result<Transaction, RepoError>;
-
-    fn get_all(&self) -> Result<Vec<Transaction>, RepoError>;
+/// Persistence operations for [`Entry`] aggregates.
+pub trait EntryRepository {
+    /// Stores a new entry.
+    fn create(&self, entry: &Entry) -> Result<(), RepoError>;
+    /// Loads the entry with the given id (`NotFound` if it does not exist).
+    fn read(&self, entry_id: EntryId) -> Result<Entry, RepoError>;
+    /// Persists changes to an existing entry.
+    fn update(&self, entry: &Entry) -> Result<(), RepoError>;
+    /// Removes the entry with the given id.
+    fn delete(&self, entry_id: EntryId) -> Result<(), RepoError>;
 }

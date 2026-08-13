@@ -122,15 +122,19 @@ impl Neg for Money {
 ///
 /// The currency determines how many decimal places an amount has — see
 /// [`Currency::decimals`].
+///
+/// The discriminants are part of the storage format (see
+/// [`as_u16`](Currency::as_u16) / [`TryFrom<u16>`](Currency::try_from)), so they
+/// are written out explicitly and must never be renumbered.
 // ISO 4217 codes are conventionally uppercase; keep them as the variant names.
 #[allow(clippy::upper_case_acronyms)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Currency {
-    EUR,
-    USD,
-    RUB,
-    UAH,
-    BTC,
+    EUR = 0,
+    USD = 1,
+    RUB = 2,
+    UAH = 3,
+    BTC = 4,
 }
 
 impl Currency {
@@ -171,5 +175,27 @@ impl Currency {
         Currency::ALL
             .into_iter()
             .find(|c| c.code().eq_ignore_ascii_case(code))
+    }
+
+    /// Encodes the currency as its stable discriminant, for storage.
+    ///
+    /// The inverse is [`TryFrom<u16>`](Currency::try_from).
+    pub fn as_u16(self) -> u16 {
+        self as u16
+    }
+}
+
+/// Decodes a currency from its stored discriminant, the inverse of
+/// [`as_u16`](Currency::as_u16).
+///
+/// Returns [`MoneyError::UnknownCurrency`] for a value no variant claims.
+impl TryFrom<u16> for Currency {
+    type Error = MoneyError;
+
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        Currency::ALL
+            .into_iter()
+            .find(|currency| currency.as_u16() == value)
+            .ok_or(MoneyError::UnknownCurrency(value))
     }
 }

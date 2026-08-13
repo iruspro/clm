@@ -39,8 +39,8 @@ impl Name {
     /// from storage). Passing empty/untrimmed text yields a `Name` that breaks
     /// the non-empty invariant — but that is a logical concern, not a
     /// memory-safety one, so this function is safe to call.
-    pub fn new_unchecked(raw_name: String) -> Self {
-        Name(raw_name)
+    pub fn new_unchecked(raw_name: impl Into<String>) -> Self {
+        Name(raw_name.into())
     }
 }
 

@@ -1,4 +1,4 @@
-//! [`Posting`] — one line of a [`Transaction`](crate::journal::Transaction): an
+//! [`Posting`] — one line of a [`Entry`](crate::journal::Entry): an
 //! amount applied to an account on the debit or credit side.
 
 mod magnitude;
@@ -9,10 +9,10 @@ use crate::ids::AccountId;
 use crate::money::Money;
 use crate::side::Side;
 
-/// A single line of a transaction: an amount applied to an account on one side.
+/// A single line of an entry: an amount applied to an account on one side.
 ///
 /// The account is referenced by [`AccountId`] — postings live inside the
-/// transaction aggregate and reference accounts rather than embedding them. The
+/// journal entry aggregate and reference accounts rather than embedding them. The
 /// [`amount`](Magnitude) is always positive; its direction is given by [`Side`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Posting {
@@ -22,7 +22,6 @@ pub struct Posting {
 }
 
 impl Posting {
-    // --- Constructors ---
     /// Creates a posting applying `amount` to `account_id` on the given `side`.
     pub fn new(account_id: AccountId, side: Side, amount: Magnitude) -> Self {
         Posting {
@@ -32,7 +31,6 @@ impl Posting {
         }
     }
 
-    // --- Accessors ---
     /// Returns the id of the account this posting applies to.
     pub fn account_id(&self) -> AccountId {
         self.account_id

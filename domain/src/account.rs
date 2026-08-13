@@ -2,15 +2,17 @@
 //! that postings are recorded against, together with its classification
 //! ([`AccountKind`]).
 
+mod error;
 mod repository;
 
-pub use self::repository::{AccountRepository, AccountWithBalance};
+pub use self::error::AccountError;
+pub use self::repository::AccountRepository;
 use crate::ids::{AccountGroupId, AccountId};
 use crate::money::Currency;
 use crate::name::Name;
 use crate::side::Side;
 
-// --- Entity ---
+// region: Account entity
 /// A single account in the chart of accounts.
 ///
 /// Holds exactly one [`Currency`] and is the unit that postings are recorded
@@ -30,7 +32,7 @@ pub struct Account {
 }
 
 impl Account {
-    // --- Constructors ---
+    // region: Constructors
     /// Creates a new account from the given fields.
     ///
     /// Generate `id` with [`AccountId::new`]. Pass `None` for `group_id`
@@ -55,9 +57,7 @@ impl Account {
         }
     }
 
-    /// Reconstitutes an account from its parts — the inverse of
-    /// [`into_parts`](Account::into_parts), for rebuilding an entity loaded
-    /// from storage.
+    /// Reconstitutes an account from its parts.
     ///
     /// Performs no validation of its own; each part enforces its own invariant
     /// at construction. When reconstituting trusted data you can build those
@@ -82,34 +82,9 @@ impl Account {
             group_id,
         }
     }
+    // endregion
 
-    /// Deconstructs the account into its owned parts, in the same order
-    /// [`from_parts`](Account::from_parts) takes them.
-    ///
-    /// The inverse of `from_parts`: use it to move the fields out (e.g. when
-    /// persisting, or building a read model) without cloning `name` and
-    /// `description`.
-    pub fn into_parts(
-        self,
-    ) -> (
-        AccountId,
-        AccountKind,
-        Currency,
-        Name,
-        String,
-        Option<AccountGroupId>,
-    ) {
-        (
-            self.id,
-            self.kind,
-            self.currency,
-            self.name,
-            self.description,
-            self.group_id,
-        )
-    }
-
-    // --- Accessors ---
+    // region: Getters/Setters
     /// Returns the account's unique id.
     pub fn id(&self) -> AccountId {
         self.id
@@ -140,9 +115,8 @@ impl Account {
         self.group_id
     }
 
-    // --- Behavior ---
     /// Replaces the account's name.
-    pub fn rename(&mut self, name: Name) {
+    pub fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 
@@ -153,31 +127,46 @@ impl Account {
 
     /// Moves the account into the given group, or detaches it from any group
     /// when `None`.
-    pub fn move_to_group(&mut self, group_id: Option<AccountGroupId>) {
+    pub fn set_group_id(&mut self, group_id: Option<AccountGroupId>) {
         self.group_id = group_id;
     }
+    // endregion
 }
+// endregion
 
-// --- Classification ---
+// region: Classification
 /// The accounting type of an account — one of the five standard categories.
 ///
 /// This fixes the account's normal balance side (see
 /// [`normal_balance`](AccountKind::normal_balance)).
+///
+/// The discriminants are part of the storage format (see
+/// [`as_u8`](AccountKind::as_u8) / [`TryFrom<u8>`](AccountKind::try_from)), so
+/// they are written out explicitly and must never be renumbered.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AccountKind {
     /// Something you own (cash, bank balance). Normal balance: debit.
-    Asset,
+    Asset = 0,
     /// Something you owe (credit-card debt, loans). Normal balance: credit.
-    Liability,
+    Liability = 1,
     /// Net worth — opening balances and accumulated result. Normal balance: credit.
-    Equity,
+    Equity = 2,
     /// A source of money that increases equity (salary, interest). Normal balance: credit.
-    Income,
+    Income = 3,
     /// A use of money that decreases equity (groceries, rent). Normal balance: debit.
-    Expense,
+    Expense = 4,
 }
 
 impl AccountKind {
+    /// All account kinds — the single source of truth for the variant list.
+    pub const ALL: [AccountKind; 5] = [
+        AccountKind::Asset,
+        AccountKind::Liability,
+        AccountKind::Equity,
+        AccountKind::Income,
+        AccountKind::Expense,
+    ];
+
     /// The side on which this account's balance increases.
     ///
     /// Assets and expenses increase on the debit side; liabilities, equity and
@@ -188,4 +177,27 @@ impl AccountKind {
             AccountKind::Liability | AccountKind::Equity | AccountKind::Income => Side::Credit,
         }
     }
+
+    /// Encodes the kind as its stable discriminant, for storage.
+    ///
+    /// The inverse is [`TryFrom<u8>`](AccountKind::try_from).
+    pub fn as_u8(self) -> u8 {
+        self as u8
+    }
 }
+
+/// Decodes a kind from its stored discriminant, the inverse of
+/// [`as_u8`](AccountKind::as_u8).
+///
+/// Returns [`AccountError::UnknownKind`] for a value no variant claims.
+impl TryFrom<u8> for AccountKind {
+    type Error = AccountError;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        AccountKind::ALL
+            .into_iter()
+            .find(|kind| kind.as_u8() == value)
+            .ok_or(AccountError::UnknownKind(value))
+    }
+}
+// endregion

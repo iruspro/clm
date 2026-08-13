@@ -4,11 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-time = "0"
-thiserror = "2"
-
-[dependencies.uuid]
-version = "1"
-features = [
-    "v7",
-]
+time = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }

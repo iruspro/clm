@@ -1,4 +1,4 @@
-//! [`BalancedPostings`] — the postings of a transaction, validated to balance
+//! [`BalancedPostings`] — the postings of a journal entry, validated to balance
 //! per currency (which implies at least two postings).
 
 mod error;
@@ -14,7 +14,7 @@ use crate::money::Money;
 ///
 /// "Balanced" means that **within each currency** the debits and credits sum to
 /// zero (using [`Posting::signed`](crate::journal::posting::Posting::signed)).
-/// Currencies balance independently, so a cross-currency transaction is valid
+/// Currencies balance independently, so a cross-currency entry is valid
 /// only if each currency nets to zero on its own. Because magnitudes are
 /// positive, balancing implies at least two postings.
 #[derive(Debug, Clone)]

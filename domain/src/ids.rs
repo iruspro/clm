@@ -2,8 +2,7 @@
 
 // TODO: collapse the repeated id-newtype boilerplate (struct + derives +
 // `generate` + `to_uuid` + `From<Uuid>`) into a `macro_rules!` macro, so each id
-// becomes a single `id_type! { /// doc \n SomeId }` invocation. Deferred until
-// comfortable with macros.
+// becomes a single `id_type! { /// doc \n SomeId }` invocation.
 
 use uuid::Uuid;
 
@@ -65,11 +64,11 @@ impl AsRef<Uuid> for AccountId {
     }
 }
 
-/// Unique identifier for a [`Transaction`](crate::journal::Transaction) (a time-ordered UUID v7).
+/// Unique identifier for a [`Entry`](crate::journal::Entry) (a time-ordered UUID v7).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct TransactionId(Uuid);
+pub struct EntryId(Uuid);
 
-impl TransactionId {
+impl EntryId {
     /// Generates a new, unique id.
     pub fn new() -> Self {
         Self(Uuid::now_v7())
@@ -81,14 +80,14 @@ impl TransactionId {
     }
 }
 
-impl From<Uuid> for TransactionId {
+impl From<Uuid> for EntryId {
     /// Wraps an existing UUID — used when reconstituting from storage.
     fn from(u: Uuid) -> Self {
         Self(u)
     }
 }
 
-impl AsRef<Uuid> for TransactionId {
+impl AsRef<Uuid> for EntryId {
     fn as_ref(&self) -> &Uuid {
         &self.0
     }
