@@ -4,3 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+# core
+application = { workspace = true }
+domain = { workspace = true }
+# types
+uuid = { workspace = true }
+# TUI
+color-eyre = "0.6.5"
+crossterm = "0.29.0"
+ratatui = "0.30.2"
+# db
+db = { workspace = true }
+rusqlite = { workspace = true }
