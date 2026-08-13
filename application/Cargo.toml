@@ -4,6 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-domain = { path = "../domain"}
-time = "0"
-thiserror = "2"
+domain = { workspace = true }
+db = { workspace = true }
+thiserror = { workspace = true }
+# types
+time = { workspace = true }
+uuid = { workspace = true }
+# db
+rusqlite = { workspace = true }
+sea-query = { workspace = true }
+sea-query-rusqlite = { workspace = true }
