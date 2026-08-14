@@ -5,7 +5,6 @@ members = [
     "clm-tui",
     "db",
     "domain",
-    "infrastructure",
 ]
 
 [workspace.dependencies]
@@ -13,7 +12,6 @@ members = [
 application = { path = "application" }
 db = { path = "db" }
 domain = { path = "domain" }
-infrastructure = { path = "infrastructure" }
 
 # Persistence
 rusqlite = { version = "0.38", features = ["bundled", "uuid"] }

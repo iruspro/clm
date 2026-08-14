@@ -46,9 +46,9 @@ The workspace follows a **clean architecture**: dependencies point *inward*,
 toward the domain. Nothing in `domain` knows about the outer layers.
 
 ```
-clm-tui ─────┐
-             ├─► application ─► domain ◄─ infrastructure
-             └──────────────────────────────┘
+clm-tui ──► application ─────────────► domain
+                 │                       ▲
+                 └─► infrastructure ─────┘
 ```
 
 | Crate | Role | Depends on |
@@ -59,7 +59,7 @@ clm-tui ─────┐
 | [`clm-tui`](clm-tui) | Terminal UI and the binary entry point; wires `application::infrastructure` into `application` at the composition root. | `application`, `domain`, `db` |
 
 A practical consequence: the domain defines `trait *Repository`, and
-`infrastructure` is the only crate allowed to implement them.
+`application::infrastructure` is the only place allowed to implement them.
 
 Inside `clm-tui` the layout follows **The Elm Architecture**: `app` holds the
 state and the composition root, `reducer` is the one pure
