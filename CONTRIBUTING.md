@@ -42,30 +42,34 @@ cargo build --workspace
 
 ## Project layout
 
-The workspace follows a **clean architecture**: dependencies point *inward*,
-toward the domain. Nothing in `domain` knows about the outer layers.
+The workspace holds two crates: [`tea`](tea), a reusable Elm Architecture
+runtime over ratatui, and [`clm`](clm), the application itself.
 
+Inside `clm` the layering is **clean architecture** — dependencies point
+*inward*, toward the domain, and nothing in `domain` knows about the outer
+layers.
 ```
-clm-tui ──► application ─────────────► domain
-                 │                       ▲
-                 └─► infrastructure ─────┘
+app ──► application ─────────────► domain
+             │                       ▲
+             └─► infrastructure ─────┘
 ```
 
-| Crate | Role | Depends on |
+| Module | Role | May use |
 | --- | --- | --- |
-| [`domain`](domain) | Pure business model — aggregates, entities, value objects, and repository **traits**. No I/O, no dependencies on other layers. | — |
-| [`application`](application) | Services that orchestrate the domain through the repository traits; read-side views; Also hosts the `infrastructure` module below. | `domain`, `db` |
-| [`application::infrastructure`](application/src/infrastructure.rs) | Concrete adapters that **implement** the domain's repository traits (SQLite persistence). | `domain` |
-| [`clm-tui`](clm-tui) | Terminal UI and the binary entry point; wires `application::infrastructure` into `application` at the composition root. | `application`, `domain`, `db` |
+| [`domain`](clm/src/domain.rs) | Pure business model — aggregates, entities, value objects, and repository **traits**. No I/O, no dependencies on other layers. | — |
+| [`application`](clm/src/application.rs) | Services that orchestrate the domain through the repository traits; read-side views; Also hosts the `infrastructure` module below. | `domain`, `db` |
+| [`application::infrastructure`](clm/src/application/infrastructure.rs) | Concrete adapters that **implement** the domain's repository traits (SQLite persistence). | `domain`, `db` |
+| [`db`](clm/src/db.rs) | The SQL schema in one place: `sea_query` identifiers, migrations, and the functions that apply them. | — |
+| [`app`](clm/src/app.rs) | Terminal UI; wires `application::infrastructure` into `application` at the composition root ([`ctx`](clm/src/ctx.rs)). | everything |
 
 A practical consequence: the domain defines `trait *Repository`, and
 `application::infrastructure` is the only place allowed to implement them.
 
-Inside `clm-tui` the layout follows **The Elm Architecture**: `app` holds the
-state and the composition root, `reducer` is the one pure
-`(State, Event) -> (State, Vec<Command>)` step, `tui` renders and listens for
-input, and `actor` runs the resulting commands against the database on a
-background thread. `cargo doc -p clm-tui --open` starts at that overview.
+Inside `app` the layout follows **The Elm Architecture**: `App` is the root
+model, `update` is the one pure `(Model, Msg) -> (Model, Cmd)` step, `view`
+renders it, and the `tea` runtime runs the resulting commands against the
+database on a background thread. `cargo doc -p clm --open` starts at that
+overview.
 
 ## Development workflow
 

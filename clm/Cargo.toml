@@ -1,0 +1,20 @@
+[package]
+name = "clm"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# TUI
+color-eyre = "0.6.5"
+ratatui = "0.30"
+tea = { workspace = true }
+
+# Persistence
+rusqlite = { version = "0.38", features = ["bundled", "uuid"] }
+sea-query = { version = "1.0", features = ["with-uuid"] }
+sea-query-rusqlite = { version = "0.8", features = ["with-uuid"] }
+
+# Shared types
+thiserror = "2"
+time = { version = "0.3", features = ["formatting", "macros", "parsing"] }
+uuid = { version = "1", features = ["v7"] }

@@ -1,29 +1,9 @@
 [workspace]
 resolver = "3"
 members = [
-    "application",
-    "clm-tui",
-    "db",
-    "domain",
+    "clm",
     "tea",
 ]
 
 [workspace.dependencies]
-# Internal crates
-application = { path = "application" }
-db = { path = "db" }
-domain = { path = "domain" }
 tea = { path = "tea" }
-
-# TUI
-ratatui = "0.30.2"
-
-# Persistence
-rusqlite = { version = "0.38", features = ["bundled", "uuid"] }
-sea-query = "1.0"
-sea-query-rusqlite = { version = "0.8", features = ["with-uuid"] }
-
-# Shared types
-thiserror = "2"
-time = "0.3"
-uuid = { version = "1", features = ["v7"] }
