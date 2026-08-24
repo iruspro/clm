@@ -193,6 +193,7 @@ dependencies = [
  "domain",
  "ratatui",
  "rusqlite",
+ "tea",
  "uuid",
 ]
 
@@ -1680,6 +1681,14 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "tea"
+version = "0.1.0"
+dependencies = [
+ "ratatui",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
